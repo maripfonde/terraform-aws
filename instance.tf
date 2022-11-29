@@ -6,6 +6,8 @@ resource "aws_instance" "public" {
   vpc_security_group_ids      = [aws_security_group.public.id]
   subnet_id                   = aws_subnet.public[0].id
 
+  user_data = file("user-data.sh")
+
   tags = {
     Name = "${var.env_code}-public"
   }
@@ -17,11 +19,19 @@ resource "aws_security_group" "public" {
   vpc_id      = aws_vpc.main.id
 
   ingress {
+    description = "HTTP from public"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+   ingress {
     description = "SSH from public"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["217.15.117.124/32"]
+    cidr_blocks = ["227.154.117.124/32"]
   }
 
   egress {
