@@ -44,20 +44,6 @@ resource "aws_security_group" "public" {
   }
 }
 
-resource "aws_instance" "private" {
-  ami                    = "ami-0b0dcb5067f052a63"
-  instance_type          = "t3.micro"
-  key_name               = "main"
-  vpc_security_group_ids = [aws_security_group.private.id]
-  subnet_id              = data.terraform_remote_state.level1.outputs.private_subnet_id[1]
-
-  user_data = file("user-data.sh")
-
-  tags = {
-    Name = "${var.env_code}-private"
-  }
-}
-
 resource "aws_security_group" "private" {
   name        = "${var.env_code}-private"
   description = "Allow VPC traffic"
