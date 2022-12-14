@@ -1,14 +1,14 @@
 resource "aws_security_group" "private" {
   name        = "${var.env_code}-private"
   description = "Allow VPC traffic"
-  vpc_id      = data.terraform_remote_state.level1.outputs.vpc_id
+  vpc_id      = var.vpc_id
 
   ingress {
     description     = "HTTP from load balancer"
     from_port       = 80
     to_port         = 80
     protocol        = "tcp"
-    security_groups = [aws_security_group.load_balancer.id]
+    security_groups = [var.load_balancer_sg]
   }
 
   egress {
